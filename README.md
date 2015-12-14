@@ -1,4 +1,4 @@
 # check_apk_version
-retrieve APK version using php + aapt
-1. APK VersionName
-2. APK VersionCode
+<p>Retrieve APK version using php + aapt</p>
+1. APK VersionName <br>
+2. APK VersionCode <br>
