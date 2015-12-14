@@ -1,0 +1,42 @@
+
+ //path of the apk 
+ $pkgdesti = 'temp/' . Auth::user()->id . '/' . $targetFile;
+ 
+  /**
+ * grab the appt file from Android SDK Tools or google appt
+ * use 'grep' in linux server, use 'find' in window server
+ * you can export the result in txt file.
+ */
+    //exec('aapt dump badging ' . $pkgdesti . ' | find "pack" > temp/' . Auth::user()->id . '/pkg.txt');
+    
+    
+    $pkgtxt_content = trim(exec('aapt dump badging ' . $pkgdesti . ' | grep "pack"'));
+
+    //search the pkg name and version on pkg.txt
+    //$pkgtxt_content = file_get_contents('temp/' . Auth::user()->id . '/pkg.txt');
+    
+    $pkgtxt_array = explode(" ", $pkgtxt_content);
+    // catch package name
+    $pkgtxt_array[1] = str_replace("'", "", $pkgtxt_array[1]);
+    $PackageName = substr($pkgtxt_array[1], 5);
+    //catch version name
+    $pkgtxt_array[3] = str_replace("'", "", $pkgtxt_array[3]);
+    $VersionName = substr($pkgtxt_array[3], 12);
+
+    $this->_log($PackageName);
+    $this->_log($VersionName);
+    
+  /**
+ * function to export Log into txt file
+ * in Laravel
+ */
+    function _log($str) {
+        $log_str = date('d.m.Y H:i:s') . ": {$str}\r\n";
+        $temp_file = public_path() . '/temp/' . date("Y-m-d") . "_log.txt";
+        
+        if (!File::exists($temp_file)) {
+            File::put($temp_file, $log_str);
+        } else {
+            File::append($temp_file, $log_str);
+        }
+    }
